@@ -2,7 +2,7 @@ scalaVersion := "2.12.7" // Also supports 2.11.x
 
 val circeVersion = "0.9.3"
 val http4sVersion = "0.16.6a"
-val pac4jVersion = "3.6.1"
+val pac4jVersion = "3.8.3"
 val specs2Version = "3.8.9"
 
 // Only necessary for SNAPSHOT releases
