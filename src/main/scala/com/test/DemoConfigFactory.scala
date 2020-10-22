@@ -49,7 +49,6 @@ class DemoConfigFactory extends ConfigFactory {
       }
     }
     oidcClient.setAuthorizationGenerator(authorizationGenerator)
-
     oidcClient
   }
 
@@ -64,11 +63,9 @@ class DemoConfigFactory extends ConfigFactory {
     new SAML2Client(cfg)
   }
 
-  def formClient() = {
+  def formClient() =
     new FormClient("http://localhost:8080/loginForm", new SimpleTestUsernamePasswordAuthenticator())
-  }
 
-  def facebookClient() = {
+  def facebookClient() =
     new FacebookClient("145278422258960", "be21409ba8f39b5dae2a7de525484da8")
-  }
 }
