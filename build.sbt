@@ -1,4 +1,4 @@
-scalaVersion := "2.12.12" // Also supports 2.11.x
+scalaVersion := "2.13.4" // Also supports 2.11.x
 
 val catsVersion = "2.3.0"
 val catsEffectVersion = "2.1.3"
