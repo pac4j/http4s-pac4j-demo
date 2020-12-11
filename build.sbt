@@ -3,7 +3,7 @@ scalaVersion := "2.13.4" // Also supports 2.11.x
 val catsVersion = "2.3.0"
 val catsEffectVersion = "2.1.3"
 val circeVersion = "0.9.3"
-val pac4jVersion = "3.9.0"
+val pac4jVersion = "4.2.0"
 val http4sVersion = "0.21.13"
 val specs2Version = "3.8.9"
 
