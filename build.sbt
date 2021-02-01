@@ -13,7 +13,7 @@ resolvers += "opensaml Repository" at "https://build.shibboleth.net/nexus/conten
 
 libraryDependencies ++= Seq(
   "org.typelevel" %% "cats-core" % catsVersion,
-  "com.lihaoyi" %% "scalatags" % "0.9.2",
+  "com.lihaoyi" %% "scalatags" % "0.9.3",
   "org.http4s" %% "http4s-dsl" % http4sVersion,
   "org.http4s" %% "http4s-blaze-server" % http4sVersion,
   "org.http4s" %% "http4s-blaze-client" % http4sVersion,
