@@ -4,7 +4,7 @@ val catsVersion = "2.6.1"
 val catsEffectVersion = "2.1.3"
 val circeVersion = "0.9.3"
 val pac4jVersion = "3.9.0"
-val http4sVersion = "0.23.0"
+val http4sVersion = "0.23.1"
 val specs2Version = "3.8.9"
 
 // Only necessary for SNAPSHOT releases
