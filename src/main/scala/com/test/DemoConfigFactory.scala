@@ -1,11 +1,13 @@
 package com.test
 
+import cats.effect.{IO, Sync}
 import org.pac4j.core.authorization.authorizer.RequireAnyRoleAuthorizer
 import org.pac4j.core.authorization.generator.AuthorizationGenerator
 import org.pac4j.core.client.Clients
 import org.pac4j.core.config.{Config, ConfigFactory}
 import org.pac4j.core.context.WebContext
-import org.pac4j.core.profile.CommonProfile
+import org.pac4j.core.context.session.SessionStore
+import org.pac4j.core.profile.{CommonProfile, UserProfile}
 import org.pac4j.http.client.indirect.FormClient
 import org.pac4j.http.credentials.authenticator.test.SimpleTestUsernamePasswordAuthenticator
 import org.pac4j.http4s.{DefaultHttpActionAdapter, Http4sCacheSessionStore, Http4sCookieSessionStore}
@@ -16,7 +18,9 @@ import org.pac4j.oidc.profile.OidcProfile
 import org.pac4j.saml.client.SAML2Client
 import org.pac4j.saml.config.SAML2Configuration
 
-class DemoConfigFactory extends ConfigFactory {
+import java.util.Optional
+
+class DemoConfigFactory[F[_] <: AnyRef : Sync] extends ConfigFactory {
   override def build(parameters: AnyRef*): Config = {
     val clients = new Clients("http://localhost:8080/callback",
       oidcClient(),
@@ -27,25 +31,25 @@ class DemoConfigFactory extends ConfigFactory {
     val config = new Config(clients)
     //config.addAuthorizer("admin", new RequireAnyRoleAuthorizer[_ <: CommonProfile]("ROLE_ADMIN"))
     //config.addAuthorizer("custom", new CustomAuthorizer)
-    config.setHttpActionAdapter(DefaultHttpActionAdapter)  // <-- Render a nicer page
-    config.setSessionStore(new Http4sCacheSessionStore())
-    //config.setSessionStore(Http4sCookieSessionStore)
+    config.setHttpActionAdapter(new DefaultHttpActionAdapter[F])  // <-- Render a nicer page
+    config.setSessionStore(new Http4sCacheSessionStore[F]())
+//    config.setSessionStore(new Http4sCookieSessionStore[F]{})
     config
   }
 
-  def oidcClient(): OidcClient[OidcProfile, OidcConfiguration] = {
+  def oidcClient(): OidcClient = {
     val oidcConfiguration = new OidcConfiguration()
     oidcConfiguration.setClientId("343992089165-sp0l1km383i8cbm2j5nn20kbk5dk8hor.apps.googleusercontent.com")
     oidcConfiguration.setSecret("uR3D8ej1kIRPbqAFaxIE3HWh")
     oidcConfiguration.setDiscoveryURI("https://accounts.google.com/.well-known/openid-configuration")
     oidcConfiguration.setUseNonce(true)
     oidcConfiguration.addCustomParam("prompt", "consent")
-    val oidcClient = new OidcClient[OidcProfile, OidcConfiguration](oidcConfiguration)
+    val oidcClient = new OidcClient(oidcConfiguration)
 
-    val authorizationGenerator = new AuthorizationGenerator[OidcProfile] {
-      override def generate(context: WebContext, profile: OidcProfile): OidcProfile = {
+    val authorizationGenerator = new AuthorizationGenerator {
+      override def generate(context: WebContext, sessionStore: SessionStore, profile: UserProfile): Optional[UserProfile] = {
         profile.addRole("ROLE_ADMIN")
-        profile
+        Optional.of(profile)
       }
     }
     oidcClient.setAuthorizationGenerator(authorizationGenerator)
