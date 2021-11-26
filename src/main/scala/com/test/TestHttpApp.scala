@@ -3,9 +3,10 @@ package com.test
 import cats.effect._
 import ScalatagsInstances._
 import cats.data.{Kleisli, OptionT}
-import monix.eval.Task
-import monix.execution.Scheduler
-import monix.execution.schedulers.CanBlock
+import cats.effect.std.Dispatcher
+//import monix.eval.Task
+//import monix.execution.Scheduler
+//import monix.execution.schedulers.CanBlock
 import org.http4s._
 import org.http4s.dsl.Http4sDsl
 import org.http4s.headers.Location
@@ -23,7 +24,7 @@ import scalatags.Text
 
 import scala.jdk.CollectionConverters._
 
-class TestHttpApp[F[_] <: AnyRef : Sync : ContextShift](blocker: Blocker, contextBuilder: (Request[F], Config) => Http4sWebContext[F]) {
+class TestHttpApp[F[_] <: AnyRef : Sync](contextBuilder: (Request[F], Config) => Http4sWebContext[F]) {
   protected val dsl: Http4sDsl[F] = new Http4sDsl[F]{}
   import dsl._
 
@@ -36,11 +37,10 @@ class TestHttpApp[F[_] <: AnyRef : Sync : ContextShift](blocker: Blocker, contex
 
   private val config = new DemoConfigFactory[F]().build()
 
-  val callbackService = new CallbackService[F](config, blocker, contextBuilder)
+  val callbackService = new CallbackService[F](config, contextBuilder)
 
-  val localLogoutService = new LogoutService[F](config, blocker, contextBuilder, Some("/?defaulturlafterlogout"), destroySession = true)
+  val localLogoutService = new LogoutService[F](config, contextBuilder, Some("/?defaulturlafterlogout"), destroySession = true)
   val centralLogoutService = new LogoutService[F](config,
-    blocker,
     contextBuilder,
     defaultUrl = Some("http://localhost:8080/?defaulturlafterlogoutafteridp"),
     logoutUrlPattern = Some("http://localhost:8080/.*"),
@@ -90,13 +90,13 @@ class TestHttpApp[F[_] <: AnyRef : Sync : ContextShift](blocker: Blocker, contex
   val loginPages: HttpRoutes[F] =
     Router(
       "form"     -> Session.sessionManagement[F](sessionConfig)
-        .compose(SecurityFilterMiddleware.securityFilter[F](config, blocker, contextBuilder, Some("FormClient"))).apply(authedTrivial),
+        .compose(SecurityFilterMiddleware.securityFilter[F](config, contextBuilder, Some("FormClient"))).apply(authedTrivial),
       "facebook" -> Session.sessionManagement[F](sessionConfig)
-        .compose(SecurityFilterMiddleware.securityFilter[F](config, blocker, contextBuilder, Some("FacebookClient"))).apply(authedTrivial),
+        .compose(SecurityFilterMiddleware.securityFilter[F](config, contextBuilder, Some("FacebookClient"))).apply(authedTrivial),
       "oidc"     -> Session.sessionManagement[F](sessionConfig)
-        .compose(SecurityFilterMiddleware.securityFilter[F](config, blocker, contextBuilder, Some("OidcClient"))).apply(authedTrivial),
+        .compose(SecurityFilterMiddleware.securityFilter[F](config, contextBuilder, Some("OidcClient"))).apply(authedTrivial),
       "saml2"    -> Session.sessionManagement[F](sessionConfig)
-        .compose(SecurityFilterMiddleware.securityFilter[F](config, blocker, contextBuilder, Some("SAML2Client"))).apply(authedTrivial)
+        .compose(SecurityFilterMiddleware.securityFilter[F](config, contextBuilder, Some("SAML2Client"))).apply(authedTrivial)
     )
 
   val authProtectedPages: AuthedRoutes[List[CommonProfile], F] =
@@ -128,7 +128,7 @@ class TestHttpApp[F[_] <: AnyRef : Sync : ContextShift](blocker: Blocker, contex
   }
   val authedProtectedPages: HttpRoutes[F] =
     Session.sessionManagement[F](sessionConfig)
-      .compose(SecurityFilterMiddleware.securityFilter[F](config, blocker, contextBuilder))
+      .compose(SecurityFilterMiddleware.securityFilter[F](config, contextBuilder))
       { authProtectedPages }
 
   val routedHttpApp =
@@ -140,15 +140,10 @@ class TestHttpApp[F[_] <: AnyRef : Sync : ContextShift](blocker: Blocker, contex
 }
 
 object TestHttpApp {
-  class IOApp(blocker: Blocker)(implicit cs: ContextShift[IO]) extends TestHttpApp[IO](blocker, Http4sWebContext.ioInstance)
+  class App[F[_] <: AnyRef : Sync]( dispatcher: Dispatcher[F] )
+    extends TestHttpApp[F](Http4sWebContext.withDispatcherInstance(dispatcher))
 
-  class TaskApp(blocker: Blocker)(implicit s: Scheduler, permit: CanBlock) extends TestHttpApp[Task](
-    blocker,
-    (request, config) => new Http4sWebContext[Task](request, config.getSessionStore, _.runSyncUnsafe())
-  )
-
-  class ZIOApp(blocker: Blocker)(implicit runtime: zio.Runtime[Any]) extends TestHttpApp[zio.Task](
-    blocker,
-    (request, config) => new Http4sWebContext[zio.Task](request, config.getSessionStore, runtime.unsafeRun(_))
-  )
+//  class TaskApp(permit: CanBlock) extends TestHttpApp[Task](
+//    (request, config) => new Http4sWebContext[Task](request, config.getSessionStore, _.runSyncUnsafe())
+//  )
 }
