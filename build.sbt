@@ -24,7 +24,6 @@ libraryDependencies ++= Seq(
   "org.pac4j" % "pac4j-jwt" % pac4jVersion,
   "org.pac4j" % "pac4j-oauth" % pac4jVersion,
   "org.pac4j" % "pac4j-oidc" % pac4jVersion,
-//  "org.pac4j" % "pac4j-openid" % pac4jVersion,
   "org.pac4j" % "pac4j-saml" % pac4jVersion,
   "org.pac4j" %% "http4s-pac4j" % "3.0.0-SNAPSHOT",
   "org.slf4j" % "slf4j-api" % "1.7.32",
