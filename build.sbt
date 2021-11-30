@@ -6,7 +6,6 @@ val circeVersion = "0.14.1"
 val pac4jVersion = "5.1.5"
 val http4sVersion = "0.23.6"
 //val specs2Version = "3.8.9"
-//val monixVersion = "3.4.0"
 
 // Only necessary for SNAPSHOT releases
 resolvers += Resolver.sonatypeRepo("snapshots")
@@ -33,8 +32,6 @@ libraryDependencies ++= Seq(
   "org.bouncycastle" % "bcprov-jdk15on" % "1.69",
   "org.bouncycastle" % "bcutil-jdk15on" % "1.69",
   "org.bouncycastle" % "bcpkix-jdk15on" % "1.69",
-//  "io.monix" %% "monix" % monixVersion,
-//  "io.monix" %% "monix-catnap" % monixVersion,
   "dev.zio" %% "zio" % "1.0.12",
   "dev.zio" %% "zio-interop-cats" % "3.2.9.0"
 )

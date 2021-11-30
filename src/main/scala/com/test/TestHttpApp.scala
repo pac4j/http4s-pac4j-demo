@@ -4,9 +4,6 @@ import cats.effect._
 import ScalatagsInstances._
 import cats.data.{Kleisli, OptionT}
 import cats.effect.std.Dispatcher
-//import monix.eval.Task
-//import monix.execution.Scheduler
-//import monix.execution.schedulers.CanBlock
 import org.http4s._
 import org.http4s.dsl.Http4sDsl
 import org.http4s.headers.Location
@@ -142,8 +139,4 @@ class TestHttpApp[F[_] <: AnyRef : Sync](contextBuilder: (Request[F], Config) =>
 object TestHttpApp {
   class App[F[_] <: AnyRef : Sync]( dispatcher: Dispatcher[F] )
     extends TestHttpApp[F](Http4sWebContext.withDispatcherInstance(dispatcher))
-
-//  class TaskApp(permit: CanBlock) extends TestHttpApp[Task](
-//    (request, config) => new Http4sWebContext[Task](request, config.getSessionStore, _.runSyncUnsafe())
-//  )
 }
