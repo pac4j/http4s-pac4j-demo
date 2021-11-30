@@ -18,6 +18,9 @@ import org.pac4j.core.profile.{CommonProfile, ProfileManager}
 import org.pac4j.http4s.{Http4sWebContext, _}
 import scalatags.Text.all._
 import scalatags.Text
+import zio._
+import zio.blocking.Blocking
+import zio.clock.Clock
 
 import scala.jdk.CollectionConverters._
 
@@ -139,4 +142,8 @@ class TestHttpApp[F[_] <: AnyRef : Sync](contextBuilder: (Request[F], Config) =>
 object TestHttpApp {
   class App[F[_] <: AnyRef : Sync]( dispatcher: Dispatcher[F] )
     extends TestHttpApp[F](Http4sWebContext.withDispatcherInstance(dispatcher))
+
+  class ZioApp( implicit runtime: zio.Runtime[Clock & Blocking] ) extends TestHttpApp[Task](
+    ( req, conf ) => new Http4sWebContext[Task]( req, conf.getSessionStore, runtime.unsafeRun( _ ) )
+  )
 }
