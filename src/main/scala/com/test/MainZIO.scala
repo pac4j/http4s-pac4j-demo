@@ -3,16 +3,11 @@ package com.test
 import zio._
 import zio.interop.catz._
 import zio.interop.catz.implicits._
-import org.http4s.blaze.server.BlazeServerBuilder
 
 object MainZIO extends App {
 
-  def program: Task[ExitCode] =
-    BlazeServerBuilder[Task]
-      .bindHttp(8080, "localhost")
-      .withMaxHeadersLength(2 * 1024 * 1024)
-      .withHttpApp(new (TestHttpApp.ZioApp).routedHttpApp)
-      .serve.compile.lastOrError.map(e => ExitCode(e.code))
+  def program: Task[cats.effect.ExitCode] =
+    BlazeServer[Task].run(new (TestHttpApp.ZioApp).routedHttpApp)
 
   override def run(args: List[String]): URIO[zio.ZEnv, ExitCode] =
     ZIO.runtime[ZEnv].flatMap { implicit rts =>
