@@ -85,7 +85,7 @@ class TestHttpApp[F[_] <: AnyRef : Sync](contextBuilder: (Request[F], Config) =>
     }
 
   private val authedTrivial: AuthedRoutes[List[CommonProfile], F] =
-    Kleisli(_ => OptionT.liftF(MovedPermanently(Location(uri"/"))))
+    Kleisli(_ => OptionT.liftF(Found(Location(uri"/"))))
 
   val loginPages: HttpRoutes[F] =
     Router(
