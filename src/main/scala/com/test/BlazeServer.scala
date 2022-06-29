@@ -4,7 +4,6 @@ import cats.effect._
 import cats.syntax.apply._
 import cats.syntax.functor._
 import com.comcast.ip4s.IpLiteralSyntax
-import fs2.INothing
 import fs2.concurrent.{Signal, SignallingRef}
 import fs2.io.net.Network
 import org.http4s.HttpApp
@@ -45,8 +44,8 @@ object BlazeServer {
 
   private def tcpShutdownServer[F[_]](
     signalOut: SignallingRef[F, Boolean]
-  )( implicit F: Async[F] ): fs2.Stream[F, INothing] = {
-    def stream( ownSignal: SignallingRef[F, Boolean] ): fs2.Stream[F, INothing] =
+  )( implicit F: Async[F] ): fs2.Stream[F, Nothing] = {
+    def stream( ownSignal: SignallingRef[F, Boolean] ): fs2.Stream[F, Nothing] =
       Network[F]
         .server( address = Some( ipv4"127.0.0.1" ), port = Some( port"8081" ) )
         .evalMap(

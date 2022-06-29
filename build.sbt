@@ -5,6 +5,7 @@ val catsVersion = "2.6.1"
 val circeVersion = "0.14.1"
 val pac4jVersion = "5.4.3"
 val http4sVersion = "0.23.13"
+val http4sBlazeVersion = "0.23.12"
 //val specs2Version = "3.8.9"
 
 // Only necessary for SNAPSHOT releases
@@ -15,8 +16,8 @@ libraryDependencies ++= Seq(
   "org.typelevel" %% "cats-core" % catsVersion,
   "com.lihaoyi" %% "scalatags" % "0.11.1",
   "org.http4s" %% "http4s-dsl" % http4sVersion,
-  "org.http4s" %% "http4s-blaze-server" % http4sVersion,
-  "org.http4s" %% "http4s-blaze-client" % http4sVersion,
+  "org.http4s" %% "http4s-blaze-server" % http4sBlazeVersion,
+  "org.http4s" %% "http4s-blaze-client" % http4sBlazeVersion,
 //  "org.http4s" %% "http4s-scalatags" % http4sVersion,
   "org.pac4j" % "pac4j-core" % pac4jVersion,
   "org.pac4j" % "pac4j-cas" % pac4jVersion,
@@ -32,8 +33,8 @@ libraryDependencies ++= Seq(
   "org.bouncycastle" % "bcprov-jdk15on" % "1.69",
   "org.bouncycastle" % "bcutil-jdk15on" % "1.69",
   "org.bouncycastle" % "bcpkix-jdk15on" % "1.69",
-  "dev.zio" %% "zio" % "1.0.15",
-  "dev.zio" %% "zio-interop-cats" % "3.2.9.1"
+  "dev.zio" %% "zio" % "2.0.0",
+  "dev.zio" %% "zio-interop-cats" % "3.3.0"
 )
 
 scalacOptions ++= Seq("-language:implicitConversions", "-language:higherKinds", "-deprecation")
