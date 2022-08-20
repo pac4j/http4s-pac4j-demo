@@ -27,7 +27,7 @@ libraryDependencies ++= Seq(
   "org.pac4j" % "pac4j-oidc" % pac4jVersion,
   "org.pac4j" % "pac4j-saml" % pac4jVersion,
   "org.pac4j" %% "http4s-pac4j" % "4.0.1",
-  "org.slf4j" % "slf4j-api" % "1.7.36",
+  "org.slf4j" % "slf4j-api" % "2.0.0",
   "org.http4s" %% "http4s-server" % http4sVersion,
   "ch.qos.logback" % "logback-classic" % "1.2.11",
   "org.bouncycastle" % "bcprov-jdk15on" % "1.69",
