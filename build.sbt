@@ -34,7 +34,7 @@ libraryDependencies ++= Seq(
   "org.bouncycastle" % "bcutil-jdk15on" % "1.69",
   "org.bouncycastle" % "bcpkix-jdk15on" % "1.69",
   "dev.zio" %% "zio" % "2.0.18",
-  "dev.zio" %% "zio-interop-cats" % "23.0.03"
+  "dev.zio" %% "zio-interop-cats" % "23.1.0.0"
 )
 
 scalacOptions ++= Seq("-language:implicitConversions", "-language:higherKinds", "-deprecation")
