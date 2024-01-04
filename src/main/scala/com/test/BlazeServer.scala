@@ -12,9 +12,9 @@ import org.slf4j.LoggerFactory
 
 object BlazeServer {
 
-  def apply[F[_]: Async]: Apply[F] = new Apply[F]
+  def apply[F[_]: Async: Network]: Apply[F] = new Apply[F]
 
-  class Apply[F[_]: Async] {
+  class Apply[F[_]: Async: Network] {
     def run(
       app: HttpApp[F],
       exitRef: Ref[F, ExitCode] = Ref.unsafe( ExitCode.Success )
@@ -23,17 +23,17 @@ object BlazeServer {
 
   private val logger = LoggerFactory.getLogger(this.getClass)
 
-  private def mkStream[F[_]: Async](
+  private def mkStream[F[_]: Async: Network](
     app: HttpApp[F],
     exitRef: Ref[F, ExitCode]
   ): fs2.Stream[F, ExitCode] =
     fs2.Stream.eval( mkSignal[F] ).flatMap( mkStreamWithSignal( app, exitRef, _ ) )
 
-  private def mkStreamWithSignal[F[_]](
+  private def mkStreamWithSignal[F[_]: Network](
     app: HttpApp[F],
     exitRef: Ref[F, ExitCode],
     stopSignal: SignallingRef[F, Boolean]
-  )( implicit F: Async[F] ): fs2.Stream[F, ExitCode] = {
+  )( implicit F: Async[F]): fs2.Stream[F, ExitCode] = {
     val tcpServer  = tcpShutdownServer( stopSignal )
     val httpServer = httpAppServer[F]( app, stopSignal, exitRef )
 
@@ -42,7 +42,7 @@ object BlazeServer {
       fs2.Stream.exec( F.pure( logger.info( "HTTP server stopped" ) ) )
   }
 
-  private def tcpShutdownServer[F[_]](
+  private def tcpShutdownServer[F[_]: Network](
     signalOut: SignallingRef[F, Boolean]
   )( implicit F: Async[F] ): fs2.Stream[F, Nothing] = {
     def stream( ownSignal: SignallingRef[F, Boolean] ): fs2.Stream[F, Nothing] =

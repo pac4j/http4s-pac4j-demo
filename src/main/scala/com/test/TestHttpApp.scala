@@ -29,7 +29,7 @@ class TestHttpApp[F[_] <: AnyRef : Sync](contextBuilder: (Request[F], Config) =>
   private val sessionConfig = SessionConfig(
     cookieName = "session",
     mkCookie = ResponseCookie(_, _, path = Some("/")),
-    secret = "This is a secret",
+    secret = List.fill(16)(0xff.toByte),
     maxAge = 5.minutes
   )
 
