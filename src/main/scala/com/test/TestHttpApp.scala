@@ -22,7 +22,7 @@ import zio.{Clock, Task, Unsafe}
 
 import scala.jdk.CollectionConverters._
 
-class TestHttpApp[F[_] <: AnyRef : Sync](contextBuilder: (Request[F], Config) => Http4sWebContext[F]) {
+class TestHttpApp[F[_] <: AnyRef : Sync](contextBuilder: Http4sContextBuilder[F]) {
   protected val dsl: Http4sDsl[F] = new Http4sDsl[F]{}
   import dsl._
 
@@ -112,8 +112,8 @@ class TestHttpApp[F[_] <: AnyRef : Sync](contextBuilder: (Request[F], Config) =>
   }
 
   def getProfiles(request: Request[F]): List[CommonProfile] = {
-    val context = contextBuilder(request, config)
-    val manager = new ProfileManager(context, config.getSessionStore)
+    val context = contextBuilder(request)
+    val manager = new ProfileManager(context, config.getSessionStoreFactory.newSessionStore(null))
     manager.getProfiles.asScala.map(_.asInstanceOf[CommonProfile]).toList
   }
 
@@ -142,6 +142,6 @@ object TestHttpApp {
     extends TestHttpApp[F](Http4sWebContext.withDispatcherInstance(dispatcher))
 
   class ZioApp( implicit runtime: zio.Runtime[Clock] ) extends TestHttpApp[Task](
-    ( req, conf ) => new Http4sWebContext[Task]( req, conf.getSessionStore, Unsafe.unsafe{ implicit u => runtime.unsafe.run( _ ).getOrThrow() } )
+    req => new Http4sWebContext[Task]( req, Unsafe.unsafe{ implicit u => runtime.unsafe.run( _ ).getOrThrow() } )
   )
 }
