@@ -3,7 +3,7 @@ scalaVersion := "2.13.13"
 val catsVersion = "2.10.0"
 //val catsEffectVersion = "3.2.9"
 val circeVersion = "0.14.1"
-val pac4jVersion = "5.7.3"
+val pac4jVersion = "6.0.2"
 val http4sVersion = "0.23.26"
 val http4sBlazeVersion = "0.23.15"
 //val specs2Version = "3.8.9"
@@ -26,7 +26,7 @@ libraryDependencies ++= Seq(
   "org.pac4j" % "pac4j-oauth" % pac4jVersion,
   "org.pac4j" % "pac4j-oidc" % pac4jVersion,
   "org.pac4j" % "pac4j-saml" % pac4jVersion,
-  "org.pac4j" %% "http4s-pac4j" % "4.4.0",
+  "org.pac4j" %% "http4s-pac4j" % "5.0.0-SNAPSHOT",
   "org.slf4j" % "slf4j-api" % "2.0.13",
   "org.http4s" %% "http4s-server" % http4sVersion,
   "ch.qos.logback" % "logback-classic" % "1.5.6",

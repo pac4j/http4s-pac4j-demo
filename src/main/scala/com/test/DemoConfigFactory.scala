@@ -1,20 +1,17 @@
 package com.test
 
-import cats.effect.{IO, Sync}
-import org.pac4j.core.authorization.authorizer.RequireAnyRoleAuthorizer
+import cats.effect.Sync
 import org.pac4j.core.authorization.generator.AuthorizationGenerator
 import org.pac4j.core.client.Clients
 import org.pac4j.core.config.{Config, ConfigFactory}
-import org.pac4j.core.context.WebContext
-import org.pac4j.core.context.session.SessionStore
-import org.pac4j.core.profile.{CommonProfile, UserProfile}
+import org.pac4j.core.context.CallContext
+import org.pac4j.core.profile.UserProfile
 import org.pac4j.http.client.indirect.FormClient
 import org.pac4j.http.credentials.authenticator.test.SimpleTestUsernamePasswordAuthenticator
-import org.pac4j.http4s.{DefaultHttpActionAdapter, Http4sCacheSessionStore, Http4sCookieSessionStore}
+import org.pac4j.http4s.{DefaultHttpActionAdapter, Http4sCacheSessionStore}
 import org.pac4j.oauth.client.FacebookClient
 import org.pac4j.oidc.client.OidcClient
 import org.pac4j.oidc.config.OidcConfiguration
-import org.pac4j.oidc.profile.OidcProfile
 import org.pac4j.saml.client.SAML2Client
 import org.pac4j.saml.config.SAML2Configuration
 
@@ -32,7 +29,7 @@ class DemoConfigFactory[F[_] <: AnyRef : Sync] extends ConfigFactory {
     //config.addAuthorizer("admin", new RequireAnyRoleAuthorizer[_ <: CommonProfile]("ROLE_ADMIN"))
     //config.addAuthorizer("custom", new CustomAuthorizer)
     config.setHttpActionAdapter(new DefaultHttpActionAdapter[F])  // <-- Render a nicer page
-    config.setSessionStore(new Http4sCacheSessionStore[F]())
+    config.setSessionStoreFactory(_ => new Http4sCacheSessionStore[F]())
 //    config.setSessionStore(new Http4sCookieSessionStore[F]{})
     config
   }
@@ -47,8 +44,8 @@ class DemoConfigFactory[F[_] <: AnyRef : Sync] extends ConfigFactory {
     val oidcClient = new OidcClient(oidcConfiguration)
 
     val authorizationGenerator = new AuthorizationGenerator {
-      override def generate(context: WebContext, sessionStore: SessionStore, profile: UserProfile): Optional[UserProfile] = {
-        profile.addRole("ROLE_ADMIN")
+      override def generate(ctx: CallContext, profile: UserProfile): Optional[UserProfile] = {
+      profile.addRole("ROLE_ADMIN")
         Optional.of(profile)
       }
     }
