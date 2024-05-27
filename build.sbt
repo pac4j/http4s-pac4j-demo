@@ -26,7 +26,7 @@ libraryDependencies ++= Seq(
   "org.pac4j" % "pac4j-oauth" % pac4jVersion,
   "org.pac4j" % "pac4j-oidc" % pac4jVersion,
   "org.pac4j" % "pac4j-saml" % pac4jVersion,
-  "org.pac4j" %% "http4s-pac4j" % "5.0.0-SNAPSHOT",
+  "org.pac4j" %% "http4s-pac4j" % "5.0.0",
   "org.slf4j" % "slf4j-api" % "2.0.13",
   "org.http4s" %% "http4s-server" % http4sVersion,
   "ch.qos.logback" % "logback-classic" % "1.5.6",
