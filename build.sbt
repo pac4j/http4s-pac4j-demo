@@ -31,7 +31,7 @@ libraryDependencies ++= Seq(
   "org.http4s" %% "http4s-server" % http4sVersion,
   "ch.qos.logback" % "logback-classic" % "1.5.6",
   "org.bouncycastle" % "bcprov-jdk15on" % "1.70",
-  "org.bouncycastle" % "bcutil-jdk15on" % "1.69",
+  "org.bouncycastle" % "bcutil-jdk15on" % "1.70",
   "org.bouncycastle" % "bcpkix-jdk15on" % "1.69",
   "dev.zio" %% "zio" % "2.0.19",
   "dev.zio" %% "zio-interop-cats" % "23.1.0.2"
