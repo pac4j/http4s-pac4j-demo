@@ -1,25 +1,23 @@
 package com.test
 
-import cats.effect._
-import ScalatagsInstances._
 import cats.data.{Kleisli, OptionT}
+import cats.effect._
 import cats.effect.std.Dispatcher
+import com.test.ScalatagsInstances._
 import org.http4s._
 import org.http4s.dsl.Http4sDsl
 import org.http4s.headers.Location
 import org.http4s.implicits.http4sKleisliResponseSyntaxOptionT
 import org.http4s.server.Router
 import org.http4s.syntax.all._
-import org.pac4j.core.config.Config
-import zio.interop.catz._
-
-import scala.concurrent.duration._
 import org.pac4j.core.profile.{CommonProfile, ProfileManager}
-import org.pac4j.http4s.{Http4sWebContext, _}
-import scalatags.Text.all._
+import org.pac4j.http4s._
 import scalatags.Text
+import scalatags.Text.all._
+import zio.interop.catz._
 import zio.{Clock, Task, Unsafe}
 
+import scala.concurrent.duration._
 import scala.jdk.CollectionConverters._
 
 class TestHttpApp[F[_] <: AnyRef : Sync](contextBuilder: Http4sContextBuilder[F]) {

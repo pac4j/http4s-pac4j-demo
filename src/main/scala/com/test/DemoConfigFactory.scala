@@ -18,6 +18,8 @@ import org.pac4j.saml.config.SAML2Configuration
 import java.util.Optional
 
 class DemoConfigFactory[F[_] <: AnyRef : Sync] extends ConfigFactory {
+  private lazy val sessionStore = new Http4sCacheSessionStore[F]()
+
   override def build(parameters: AnyRef*): Config = {
     val clients = new Clients("http://localhost:8080/callback",
       oidcClient(),
@@ -29,7 +31,7 @@ class DemoConfigFactory[F[_] <: AnyRef : Sync] extends ConfigFactory {
     //config.addAuthorizer("admin", new RequireAnyRoleAuthorizer[_ <: CommonProfile]("ROLE_ADMIN"))
     //config.addAuthorizer("custom", new CustomAuthorizer)
     config.setHttpActionAdapter(new DefaultHttpActionAdapter[F])  // <-- Render a nicer page
-    config.setSessionStoreFactory(_ => new Http4sCacheSessionStore[F]())
+    config.setSessionStoreFactory(_ => sessionStore)
 //    config.setSessionStore(new Http4sCookieSessionStore[F]{})
     config
   }
