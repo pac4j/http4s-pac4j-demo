@@ -11,21 +11,12 @@ echo "🚀 Starting http4s-pac4j-demo..."
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR/.."
 
-# Determine which sbt command to use
-if command -v sbt >/dev/null 2>&1; then
-    SBT_CMD="sbt"
-    echo "🛠️  Using system SBT command: $SBT_CMD"
-else
-    echo "📥 sbt command not found, using sbt wrapper..."
-    # Download sbt launcher if not exists
-    if [ ! -f "sbt" ]; then
-        echo "📥 Downloading sbt launcher..."
-        curl -L -o sbt "https://raw.githubusercontent.com/sbt/sbt/v1.9.6/sbt"
-        chmod +x sbt
-    fi
-    SBT_CMD="./sbt"
-    echo "🛠️  Using downloaded SBT wrapper: $SBT_CMD"
+# Check that sbt is installed
+if ! command -v sbt >/dev/null 2>&1; then
+    echo "❌ sbt command not found: install sbt (https://www.scala-sbt.org/download/)"
+    exit 1
 fi
+SBT_CMD="sbt"
 
 # Clean any existing sbt processes to avoid conflicts
 echo "🧹 Cleaning up any existing sbt processes..."

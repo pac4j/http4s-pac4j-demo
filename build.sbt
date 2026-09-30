@@ -8,8 +8,6 @@ val http4sVersion = "0.23.38"
 val http4sBlazeVersion = "0.23.18"
 //val specs2Version = "3.8.9"
 
-// Only necessary for SNAPSHOT releases
-resolvers += Resolver.sonatypeRepo("snapshots")
 resolvers += "opensaml Repository" at "https://build.shibboleth.net/nexus/content/repositories/releases"
 
 libraryDependencies ++= Seq(
