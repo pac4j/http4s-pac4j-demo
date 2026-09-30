@@ -16,7 +16,8 @@ if ! command -v sbt >/dev/null 2>&1; then
     echo "❌ sbt command not found: install sbt (https://www.scala-sbt.org/download/)"
     exit 1
 fi
-SBT_CMD="sbt"
+# Run sbt in the foreground: sbt 2.x otherwise uses the thin client and a background server
+SBT_CMD="sbt --server"
 
 # Clean any existing sbt processes to avoid conflicts
 echo "🧹 Cleaning up any existing sbt processes..."
