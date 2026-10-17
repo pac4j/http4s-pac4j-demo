@@ -31,7 +31,7 @@ libraryDependencies ++= Seq(
   "org.bouncycastle" % "bcprov-jdk15on" % "1.70",
   "org.bouncycastle" % "bcutil-jdk15on" % "1.69",
   "org.bouncycastle" % "bcpkix-jdk15on" % "1.70",
-  "dev.zio" %% "zio" % "2.1.26",
+  "dev.zio" %% "zio" % "2.1.27",
   "dev.zio" %% "zio-interop-cats" % "23.1.0.14"
 )
 
